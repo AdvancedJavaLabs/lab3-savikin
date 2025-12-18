@@ -1,0 +1,38 @@
+services:
+  namenode:
+    container_name: namenode
+    image: apache/hadoop:3.4.1
+    hostname: namenode
+    command: ["hdfs", "namenode"]
+    ports:
+      - 9870:9870
+    env_file:
+      - ./config
+    environment:
+       ENSURE_NAMENODE_DIR: "/tmp/hadoop-root/dfs/name"
+  datanode:
+    container_name: datanode
+    image: apache/hadoop:3.4.1
+    command: ["hdfs", "datanode"]
+    volumes:
+      - ./app/target/scala-3.7.4/:/app/
+      - ./data/:/data/
+      - ./results/:/results/
+    env_file:
+      - ./config
+  resourcemanager:
+    container_name: resourcemanager
+    image: apache/hadoop:3.4.1
+    hostname: resourcemanager
+    command: ["yarn", "resourcemanager"]
+    ports:
+      - 8088:8088
+    env_file:
+      - ./config
+  nodemanager:
+    container_name: nodemanager
+    image: apache/hadoop:3.4.1
+    command: ["yarn", "nodemanager"]
+    env_file:
+      - ./config
+
